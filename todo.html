@@ -8,9 +8,10 @@
       <h2 class="showAllToggler"><input type="checkbox" id="showAllBox" ng-model="todo.showAll" ng-click="todo.toggleAll()"/>Show Completed</h2>
       <div ng-class="{showAll: todo.showAll}">
         <input id="newTodo" ng-model="todo.newTodo" ng-keyup="$event.keyCode == 13 ? todo.addNewTodo() : null" placeholder="New todo"/>
-        <div ng-repeat="thisTodo in todo.todos track by $index" class="todo" ng-class="{new: thisTodo.new, done:thisTodo.done}">
-          <input type="checkbox" ng-click="todo.removeTodo($index, $event)"/>
+        <div ng-repeat="thisTodo in todo.todos track by $index" class="todo" ng-class="{new: thisTodo.new, done:thisTodo.done}" ng-mouseover="todo.showX=$index" ng-mouseleave="todo.showX=null">
+          <input type="checkbox" ng-checked="thisTodo.done" ng-click="todo.toggleTodo($index, $event)"/>
            {{thisTodo.ttd}}
+          <img height="10vh" ng-if="todo.showX==$index" src="https://upload.wikimedia.org/wikipedia/commons/a/a2/X_mark.svg" ng-click="todo.removeTodo($index,$event)" />
         </div>
       </div>
 
@@ -33,6 +34,8 @@ angular.module("app", []).controller("todoController", function() {
     if(this.showAll){
       bodyElement.classList.add('showingAll');
     }
+
+    this.showX = null;
     
     this.addNewTodo = function(){
     	if(this.newTodo){
@@ -43,7 +46,7 @@ angular.module("app", []).controller("todoController", function() {
       this.newTodo = "";
     }
     
-    this.removeTodo = function(index, e){
+    this.toggleTodo = function(index, e){
       // this.todos.splice(index,1);
       // e.preventDefault();
       var ttdObj = this.todos[index];
@@ -57,6 +60,11 @@ angular.module("app", []).controller("todoController", function() {
         this.todos[index] = {ttd:ttdObj.ttd, done:true, new:false };
       }
       localStorage.setItem('TTDlist', JSON.stringify(this.todos));
+    }
+
+    this.removeTodo = function(index, e){
+      this.todos.splice(index,1);
+       localStorage.setItem('TTDlist', JSON.stringify(this.todos));
     }
 
     this.toggleAll = function(){
@@ -112,6 +120,8 @@ body{background-image: url('./background.jpg');
 }
 .todo{
   margin-bottom: 5px;
+  padding-right: 20px;
+  display: table;
 }
 @keyframes slide-down {
     0% {
