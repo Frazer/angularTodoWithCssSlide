@@ -8,9 +8,9 @@
       <h2 class="showAllToggler"><input type="checkbox" id="showAllBox" ng-model="todo.showAll" ng-click="todo.toggleAll()"/>Show Completed</h2>
       <div ng-class="{showAll: todo.showAll}">
         <input id="newTodo" ng-model="todo.newTodo" ng-keyup="$event.keyCode == 13 ? todo.addNewTodo() : null" placeholder="New todo"/>
-        <div ng-repeat="thisTodo in todo.todos track by $index" class="todo new">
+        <div ng-repeat="thisTodo in todo.todos track by $index" class="todo" ng-class="{new: thisTodo.new, done:thisTodo.done}">
           <input type="checkbox" ng-click="todo.removeTodo($index, $event)"/>
-           {{thisTodo}}
+           {{thisTodo.ttd}}
         </div>
       </div>
 
@@ -23,11 +23,22 @@
 </body>
 <script>
 angular.module("app", []).controller("todoController", function() {
-    this.todos = [];
+    // Read (Single)
+    var readLocalStorage = JSON.parse(localStorage.getItem('TTDlist')); 
+    this.todos = readLocalStorage ? readLocalStorage : [];
+
+    var readLocalDisplayAll = JSON.parse(localStorage.getItem('TTDlistAll')); 
+    this.showAll = readLocalDisplayAll ? readLocalDisplayAll : false;
+    var bodyElement = document.querySelector( 'body' );
+    if(this.showAll){
+      bodyElement.classList.add('showingAll');
+    }
     
     this.addNewTodo = function(){
     	if(this.newTodo){
-        this.todos.push(this.newTodo);
+        this.todos.push({ttd: this.newTodo, done:false, new:true});
+        localStorage.setItem('TTDlist', JSON.stringify(this.todos));
+
       }
       this.newTodo = "";
     }
@@ -35,26 +46,38 @@ angular.module("app", []).controller("todoController", function() {
     this.removeTodo = function(index, e){
       // this.todos.splice(index,1);
       // e.preventDefault();
-      if(e.path[1].classList.contains("done")){
+      var ttdObj = this.todos[index];
+      if(ttdObj.done){
         //this allows transitions only on first creation
         e.path[1].classList.remove("new");
         e.path[1].classList.remove("done");
+        this.todos[index] = {ttd:ttdObj.ttd, done:false, new:false };
       }else{
         e.path[1].classList.add("done");
+        this.todos[index] = {ttd:ttdObj.ttd, done:true, new:false };
       }
+      localStorage.setItem('TTDlist', JSON.stringify(this.todos));
     }
 
-    var bodyElement = document.querySelector( 'body' );
     this.toggleAll = function(){
-        if(bodyElement.classList.contains('showingAll')){
-          bodyElement.classList.remove('showingAll');
+        if(this.showAll){
+          //showAll has just been turned on
+          localStorage.setItem('TTDlistAll', JSON.stringify(this.showAll));
+          setTimeout(function(){ 
+            bodyElement.classList.add('showingAll'); 
+          }, 1000);
         }else{
-          setTimeout(function(){ bodyElement.classList.add('showingAll'); }, 1000);
+          //showAll has just been turned off
+          bodyElement.classList.remove('showingAll');
+          localStorage.setItem('TTDlistAll', JSON.stringify(this.showAll));
         }
         
     }
 });
 document.getElementById("newTodo").focus();
+
+
+
 </script>
 <style>
 
