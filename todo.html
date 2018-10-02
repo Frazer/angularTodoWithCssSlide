@@ -3,9 +3,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 </head>
 <body>
-  <div ng-app="app" ng-controller="todoController as todo" >
-      <h1>Todo list</h1>
-      <h2><input type="checkbox" id="showAllBox" ng-model="todo.showAll" ng-click="todo.toggleAll()"/>Show Completed</h2>
+  <div ng-app="app" ng-controller="todoController as todo" class="mainContainer">
+      <h1 class="mainHeading">Todo list</h1>
+      <h2 class="showAllToggler"><input type="checkbox" id="showAllBox" ng-model="todo.showAll" ng-click="todo.toggleAll()"/>Show Completed</h2>
       <div ng-class="{showAll: todo.showAll}">
         <input id="newTodo" ng-model="todo.newTodo" ng-keyup="$event.keyCode == 13 ? todo.addNewTodo() : null"/>
         <div ng-repeat="thisTodo in todo.todos track by $index" class="todo new">
@@ -57,6 +57,29 @@ angular.module("app", []).controller("todoController", function() {
 document.getElementById("newTodo").focus();
 </script>
 <style>
+
+body{background-image: url('./background.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;  
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.mainContainer{ margin: auto; width:60vw; margin-top:10vh; 
+  border:1px solid black;
+  border-radius: 1px;
+  background: white;
+  padding: 0px 40px 40px 40px;
+}
+.mainHeading{ text-align: center;}
+.showAllToggler{ text-align: right;}
+
+@media (max-width: 670px) {
+  .mainContainer{ width:96vw; margin-top:2vh; }
+}
+
 #newTodo{
   margin-bottom: 15px;
 }
@@ -96,7 +119,7 @@ div.todo.done  {
     }
     85% {
         opacity: 0.5;
-        transform: translateX(-400px);
+        transform: translateX(-900px);
     }
     100%{
         opacity: 0; 
@@ -119,7 +142,7 @@ body:not(.showingAll) .showAll div.todo.done{
   }
   2%{
     opacity: 0.2;
-    transform: translateX(-100px);
+    transform: translateX(-900px);
     margin-bottom: 0px;
   }
   100%{
