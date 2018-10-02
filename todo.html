@@ -6,11 +6,10 @@
   <div ng-app="app">
       <h1>Todo list</h1>
       <div ng-controller="todoController as todo">
-        <input ng-model="todo.newTodo" ng-keyup="$event.keyCode == 13 ? todo.addNewTodo() : null"/>
-        <div ng-repeat="thisTodo in todo.todos track by $index" >
-          <div  class="todo">
-           <input type="checkbox" ng-click="todo.removeTodo($index, $event)">{{thisTodo}}
-          </div>
+        <input id="newTodo" ng-model="todo.newTodo" ng-keyup="$event.keyCode == 13 ? todo.addNewTodo() : null"/>
+        <div ng-repeat="thisTodo in todo.todos track by $index" class="todo">
+          <input type="checkbox" ng-click="todo.removeTodo($index, $event)">
+           {{thisTodo}}
         </div>
       </div>
 
@@ -26,15 +25,58 @@ angular.module("app", []).controller("todoController", function() {
     this.todos = [];
     
     this.addNewTodo = function(){
-    	this.todos.push(this.newTodo);
+    	if(this.newTodo){
+        this.todos.push(this.newTodo);
+      }
       this.newTodo = "";
     }
     
     this.removeTodo = function(index, e){
-      this.todos.splice(index,1);
+      // this.todos.splice(index,1);
       e.preventDefault();
+      var x = e.path[1].classList.add("done");
+      
 
     }
 });
+document.getElementById("newTodo").focus();
 </script>
+<style>
+div.done, input:checked, input:checked + div {
+  overflow: hidden;
+  animation: fadeout 2s ease; 
+  animation-fill-mode: forwards 
+}
+.todo{
+  animation: slide-down 1s ease;  
+}
+@keyframes slide-down {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes fadeout {
+    0% {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+    10%{
+       opacity: 0.7;
+       transform: translateX(20px); 
+    }
+    85% {
+        opacity: 0.5;
+        transform: translateX(-400px);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-5000px);
+        height: 0;
+    }
+}
 </html>
