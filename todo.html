@@ -5,11 +5,11 @@
 <body>
   <div ng-app="app" ng-controller="todoController as todo" >
       <h1>Todo list</h1>
-      <h2><input type="checkbox" id="showAllBox" ng-model="todo.showAll"/>Show Completed</h2>
+      <h2><input type="checkbox" id="showAllBox" ng-model="todo.showAll" ng-click="todo.toggleAll()"/>Show Completed</h2>
       <div ng-class="{showAll: todo.showAll}">
         <input id="newTodo" ng-model="todo.newTodo" ng-keyup="$event.keyCode == 13 ? todo.addNewTodo() : null"/>
         <div ng-repeat="thisTodo in todo.todos track by $index" class="todo new">
-          <input type="checkbox" ng-click="todo.removeTodo($index, $event)">
+          <input type="checkbox" ng-click="todo.removeTodo($index, $event)"/>
            {{thisTodo}}
         </div>
       </div>
@@ -42,7 +42,16 @@ angular.module("app", []).controller("todoController", function() {
       }else{
         e.path[1].classList.add("done");
       }
+    }
 
+    var bodyElement = document.querySelector( 'body' );
+    this.toggleAll = function(){
+        if(bodyElement.classList.contains('showingAll')){
+          bodyElement.classList.remove('showingAll');
+        }else{
+          setTimeout(function(){ bodyElement.classList.add('showingAll'); }, 1000);
+        }
+        
     }
 });
 document.getElementById("newTodo").focus();
@@ -69,11 +78,11 @@ document.getElementById("newTodo").focus();
     }
 }
 
-div.done.new {
+div.todo.done  {
   overflow: hidden;
-  animation: fadeout 2s ease; 
+  animation: fadeout 2s ease;
   text-decoration: line-through;
-  animation-fill-mode: forwards ;
+  animation-fill-mode: forwards;
 }
 
 @keyframes fadeout {
@@ -97,9 +106,10 @@ div.done.new {
     }
 }
 
-.showAll div.done{
+body:not(.showingAll) .showAll div.todo.done{
   height: auto !important;
-  animation: fadeback 2s ease;
+  animation: fadeback 1s ease;
+  animation-fill-mode: forwards ;
 }
 @keyframes fadeback{
   0%{
@@ -118,6 +128,15 @@ div.done.new {
     margin-bottom: 5px;    
   }
 }
+
+body.showingAll .showAll div.todo.done{
+    height: auto !important;
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    margin-bottom: 5px !important;
+    animation: none;
+}
+
 
 </style>
 </html>
