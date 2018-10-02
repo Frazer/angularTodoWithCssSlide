@@ -14,12 +14,7 @@
           <img height="10vh" ng-if="todo.showX==$index" src="https://upload.wikimedia.org/wikipedia/commons/a/a2/X_mark.svg" ng-click="todo.removeTodo($index,$event)" />
         </div>
       </div>
-
-  <!--
-  todo list app
-  textfield on the page. user can enter the name of any item and hit the enter key to add that item to their list
-  every item on the list has a checkbox in front of it, clicking on the checkbox removes the item from the list
-  -->
+      <a href="https://github.com/Frazer/angularTodoWithCssSlide/blob/master/todo.html" class="footer">© Frazer - See the code</a>
   </div>
 </body>
 <script>
@@ -106,6 +101,7 @@ body{background-image: url('./background.jpg');
 }
 .mainHeading{ text-align: center;}
 .showAllToggler{ float: right;}
+.footer{float: right;}
 
 @media (max-width: 670px) {
   .mainContainer{ width:96vw; margin-top:2vh; }
