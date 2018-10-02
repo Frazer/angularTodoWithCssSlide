@@ -1,0 +1,40 @@
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+<body>
+  <div ng-app="app">
+      <h1>Todo list</h1>
+      <div ng-controller="todoController as todo">
+        <input ng-model="todo.newTodo" ng-keyup="$event.keyCode == 13 ? todo.addNewTodo() : null"/>
+        <div ng-repeat="thisTodo in todo.todos track by $index" >
+          <div  class="todo">
+           <input type="checkbox" ng-click="todo.removeTodo($index, $event)">{{thisTodo}}
+          </div>
+        </div>
+      </div>
+
+  <!--
+  todo list app
+  textfield on the page. user can enter the name of any item and hit the enter key to add that item to their list
+  every item on the list has a checkbox in front of it, clicking on the checkbox removes the item from the list
+  -->
+  </div>
+</body>
+<script>
+angular.module("app", []).controller("todoController", function() {
+    this.todos = [];
+    
+    this.addNewTodo = function(){
+    	this.todos.push(this.newTodo);
+      this.newTodo = "";
+    }
+    
+    this.removeTodo = function(index, e){
+      this.todos.splice(index,1);
+      e.preventDefault();
+
+    }
+});
+</script>
+</html>
