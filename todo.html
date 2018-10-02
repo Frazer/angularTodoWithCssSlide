@@ -3,11 +3,12 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 </head>
 <body>
-  <div ng-app="app">
+  <div ng-app="app" ng-controller="todoController as todo" >
       <h1>Todo list</h1>
-      <div ng-controller="todoController as todo">
+      <h2><input type="checkbox" id="showAllBox" ng-model="todo.showAll"/>Show Completed</h2>
+      <div ng-class="{showAll: todo.showAll}">
         <input id="newTodo" ng-model="todo.newTodo" ng-keyup="$event.keyCode == 13 ? todo.addNewTodo() : null"/>
-        <div ng-repeat="thisTodo in todo.todos track by $index" class="todo">
+        <div ng-repeat="thisTodo in todo.todos track by $index" class="todo new">
           <input type="checkbox" ng-click="todo.removeTodo($index, $event)">
            {{thisTodo}}
         </div>
@@ -33,22 +34,29 @@ angular.module("app", []).controller("todoController", function() {
     
     this.removeTodo = function(index, e){
       // this.todos.splice(index,1);
-      e.preventDefault();
-      var x = e.path[1].classList.add("done");
-      
+      // e.preventDefault();
+      if(e.path[1].classList.contains("done")){
+        //this allows transitions only on first creation
+        e.path[1].classList.remove("new");
+        e.path[1].classList.remove("done");
+      }else{
+        e.path[1].classList.add("done");
+      }
 
     }
 });
 document.getElementById("newTodo").focus();
 </script>
 <style>
-div.done, input:checked, input:checked + div {
-  overflow: hidden;
-  animation: fadeout 2s ease; 
-  animation-fill-mode: forwards 
+#newTodo{
+  margin-bottom: 15px;
+}
+
+.todo.new{
+  animation: slide-down 1s ease;  
 }
 .todo{
-  animation: slide-down 1s ease;  
+  margin-bottom: 5px;
 }
 @keyframes slide-down {
     0% {
@@ -60,6 +68,14 @@ div.done, input:checked, input:checked + div {
         transform: translateY(0);
     }
 }
+
+div.done.new {
+  overflow: hidden;
+  animation: fadeout 2s ease; 
+  text-decoration: line-through;
+  animation-fill-mode: forwards ;
+}
+
 @keyframes fadeout {
     0% {
         opacity: 1;
@@ -73,10 +89,35 @@ div.done, input:checked, input:checked + div {
         opacity: 0.5;
         transform: translateX(-400px);
     }
-    100% {
-        opacity: 0;
+    100%{
+        opacity: 0; 
         transform: translateX(-5000px);
-        height: 0;
+        height: 0; 
+        margin-bottom: 0px;
     }
 }
+
+.showAll div.done{
+  height: auto !important;
+  animation: fadeback 2s ease;
+}
+@keyframes fadeback{
+  0%{
+    opacity: 0;
+    transform: translateX(-5000px);
+    margin-bottom: 0px;
+  }
+  2%{
+    opacity: 0.2;
+    transform: translateX(-100px);
+    margin-bottom: 0px;
+  }
+  100%{
+    opacity: 1;
+    transform: translateX(0);
+    margin-bottom: 5px;    
+  }
+}
+
+</style>
 </html>
