@@ -3,7 +3,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
   <title>Things TO Do - by Frazer</title>
 </head>
-<body ng-app="app" ng-controller="todoController as todo" ng-class="todo.showingAll && 'showingAll'">
+<body ng-app="app" ng-controller="todoController as todo" ng-class="{showingAll: todo.showingAll}">
   <div class="mainContainer">
       <h1 class="mainHeading">Todo list</h1>
       <h2 class="showAllToggler"><input type="checkbox" id="showAllBox" ng-model="todo.showAll" ng-click="todo.toggleAll()"/>Show Completed</h2>
@@ -11,7 +11,7 @@
         <input id="newTodo" ng-model="todo.newTodo" ng-keyup="$event.keyCode == 13 ? todo.addNewTodo() : null" placeholder="New todo"/>
         <div ng-repeat="thisTodo in todo.todos track by $index" class="todo" ng-class="{new: thisTodo.new, done:thisTodo.done}" ng-mouseover="todo.showX=$index" ng-mouseleave="todo.showX=null">
           <input type="checkbox" ng-checked="thisTodo.done" ng-click="todo.toggleTodo($index, $event)"/>
-           {{thisTodo.ttd}}
+            {{thisTodo.ttd}}
           <img height="10vh" ng-if="todo.showX==$index" src="https://upload.wikimedia.org/wikipedia/commons/a/a2/X_mark.svg" ng-click="todo.removeTodo($index,$event)" />
         </div>
       </div>
@@ -34,7 +34,7 @@ angular.module("app", []).controller("todoController", function() {
     this.showX = null;
     
     this.addNewTodo = function(){
-    	if(this.newTodo){
+      if(this.newTodo){
         this.todos.push({ttd: this.newTodo, done:false, new:true});
         saveTodos()
 
@@ -67,7 +67,7 @@ angular.module("app", []).controller("todoController", function() {
           }, 1000)
         }else{
           this.showingAll = false;
-    }
+        }
     }
 });
 document.getElementById("newTodo").focus();
@@ -155,7 +155,9 @@ body:not(.showingAll) .showAll div.todo.done{
   height: auto !important;
   animation: fadeback 1s ease;
   animation-fill-mode: forwards ;
+  display: block;
 }
+
 @keyframes fadeback{
   0%{
     opacity: 0;
