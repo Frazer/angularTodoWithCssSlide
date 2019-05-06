@@ -3,8 +3,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
   <title>Things TO Do - by Frazer</title>
 </head>
-<body>
-  <div ng-app="app" ng-controller="todoController as todo" class="mainContainer">
+<body ng-app="app" ng-controller="todoController as todo" ng-class="todo.showAll && 'showingAll'">
+  <div class="mainContainer">
       <h1 class="mainHeading">Todo list</h1>
       <h2 class="showAllToggler"><input type="checkbox" id="showAllBox" ng-model="todo.showAll" ng-click="todo.toggleAll()"/>Show Completed</h2>
       <div ng-class="{showAll: todo.showAll}">
@@ -26,9 +26,9 @@ angular.module("app", []).controller("todoController", function() {
 
     var readLocalDisplayAll = JSON.parse(localStorage.getItem('TTDlistAll')); 
     this.showAll = readLocalDisplayAll ? readLocalDisplayAll : false;
-    var bodyElement = document.querySelector( 'body' );
-    if(this.showAll){
-      bodyElement.classList.add('showingAll');
+
+    saveTodos = () =>{
+      localStorage.setItem('TTDlist', JSON.stringify(this.todos));
     }
 
     this.showX = null;
@@ -36,46 +36,30 @@ angular.module("app", []).controller("todoController", function() {
     this.addNewTodo = function(){
     	if(this.newTodo){
         this.todos.push({ttd: this.newTodo, done:false, new:true});
-        localStorage.setItem('TTDlist', JSON.stringify(this.todos));
+        saveTodos()
 
       }
       this.newTodo = "";
     }
     
     this.toggleTodo = function(index, e){
-      // this.todos.splice(index,1);
-      // e.preventDefault();
       var ttdObj = this.todos[index];
       if(ttdObj.done){
         //this allows transitions only on first creation
-        e.path[1].classList.remove("new");
-        e.path[1].classList.remove("done");
         this.todos[index] = {ttd:ttdObj.ttd, done:false, new:false };
       }else{
-        e.path[1].classList.add("done");
         this.todos[index] = {ttd:ttdObj.ttd, done:true, new:false };
       }
-      localStorage.setItem('TTDlist', JSON.stringify(this.todos));
+      saveTodos()
     }
 
     this.removeTodo = function(index, e){
       this.todos.splice(index,1);
-       localStorage.setItem('TTDlist', JSON.stringify(this.todos));
+      saveTodos()
     }
 
     this.toggleAll = function(){
-        if(this.showAll){
-          //showAll has just been turned on
-          localStorage.setItem('TTDlistAll', JSON.stringify(this.showAll));
-          setTimeout(function(){ 
-            bodyElement.classList.add('showingAll'); 
-          }, 1000);
-        }else{
-          //showAll has just been turned off
-          bodyElement.classList.remove('showingAll');
-          localStorage.setItem('TTDlistAll', JSON.stringify(this.showAll));
-        }
-        
+        localStorage.setItem('TTDlistAll', JSON.stringify(this.showAll));
     }
 });
 document.getElementById("newTodo").focus();
@@ -144,8 +128,8 @@ div.todo.done  {
         transform: translateX(0px);
     }
     10%{
-       opacity: 0.7;
-       transform: translateX(20px); 
+        opacity: 0.7;
+        transform: translateX(20px); 
     }
     85% {
         opacity: 0.5;
