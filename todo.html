@@ -128,20 +128,24 @@ div.todo.done  {
   animation: fadeout 2s ease;
   text-decoration: line-through;
   animation-fill-mode: forwards;
+  display: block;
 }
 
 @keyframes fadeout {
     0% {
         opacity: 1;
         transform: translateX(0px);
+        height: 20px;
     }
     10%{
         opacity: 0.7;
         transform: translateX(20px); 
+        height: 19px;
     }
     85% {
         opacity: 0.5;
         transform: translateX(-900px);
+        height: 1px;
     }
     100%{
         opacity: 0; 
@@ -152,10 +156,9 @@ div.todo.done  {
 }
 
 body:not(.showingAll) .showAll div.todo.done{
-  height: auto !important;
+  height: auto;
   animation: fadeback 1s ease;
-  animation-fill-mode: forwards ;
-  display: block;
+  animation-fill-mode: forwards ; 
 }
 
 @keyframes fadeback{
@@ -163,24 +166,27 @@ body:not(.showingAll) .showAll div.todo.done{
     opacity: 0;
     transform: translateX(-5000px);
     margin-bottom: 0px;
+    height: 0px;
   }
   2%{
     opacity: 0.2;
     transform: translateX(-900px);
     margin-bottom: 0px;
+    height: 1px;
   }
   100%{
     opacity: 1;
     transform: translateX(0);
     margin-bottom: 5px;    
+    height: 20px;
   }
 }
 
 body.showingAll .showAll div.todo.done{
-    height: auto !important;
-    opacity: 1 !important;
-    transform: translateX(0) !important;
-    margin-bottom: 5px !important;
+    height: auto;
+    opacity: 1;
+    transform: translateX(0);
+    margin-bottom: 5px;
     animation: none;
 }
 
