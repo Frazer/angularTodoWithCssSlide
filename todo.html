@@ -3,7 +3,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
   <title>Things TO Do - by Frazer</title>
 </head>
-<body ng-app="app" ng-controller="todoController as todo" ng-class="todo.showAll && 'showingAll'">
+<body ng-app="app" ng-controller="todoController as todo" ng-class="todo.showingAll && 'showingAll'">
   <div class="mainContainer">
       <h1 class="mainHeading">Todo list</h1>
       <h2 class="showAllToggler"><input type="checkbox" id="showAllBox" ng-model="todo.showAll" ng-click="todo.toggleAll()"/>Show Completed</h2>
@@ -25,7 +25,7 @@ angular.module("app", []).controller("todoController", function() {
     this.todos = readLocalStorage ? readLocalStorage : [];
 
     var readLocalDisplayAll = JSON.parse(localStorage.getItem('TTDlistAll')); 
-    this.showAll = readLocalDisplayAll ? readLocalDisplayAll : false;
+    this.showingAll = this.showAll = readLocalDisplayAll ? readLocalDisplayAll : false;
 
     saveTodos = () =>{
       localStorage.setItem('TTDlist', JSON.stringify(this.todos));
@@ -60,6 +60,14 @@ angular.module("app", []).controller("todoController", function() {
 
     this.toggleAll = function(){
         localStorage.setItem('TTDlistAll', JSON.stringify(this.showAll));
+        
+        if(this.showAll){
+          setTimeout(function(){ 
+            this.showingAll = true;
+          }, 1000)
+        }else{
+          this.showingAll = false;
+    }
     }
 });
 document.getElementById("newTodo").focus();
